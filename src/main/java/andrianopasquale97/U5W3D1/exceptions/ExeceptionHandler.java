@@ -3,9 +3,11 @@ package andrianopasquale97.U5W3D1.exceptions;
 
 import andrianopasquale97.U5W3D1.payloads.ErrorsResponseDTO;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
 
 import java.time.LocalDateTime;
 import java.util.stream.Collectors;
@@ -50,6 +52,12 @@ public class ExeceptionHandler {
     @ExceptionHandler(CorrectDelete.class)
     @ResponseStatus(HttpStatus.ACCEPTED)
     public ErrorsResponseDTO handleAcceptedErrors(CorrectDelete ex) {
+        return new ErrorsResponseDTO(ex.getMessage(), LocalDateTime.now());
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ErrorsResponseDTO handleAccessDenied(AccessDeniedException ex) {
         return new ErrorsResponseDTO(ex.getMessage(), LocalDateTime.now());
     }
 

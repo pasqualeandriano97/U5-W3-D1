@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,6 +27,8 @@ public class DipendenteService {
     private DipendentiDAO dipendentiDAO;
     @Autowired
     private Cloudinary cloudinaryService;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public DipendenteRespDTO save(DipendenteDTO newDipendente) {
         this.dipendentiDAO.findByEmail(newDipendente.email()).ifPresent(
@@ -34,7 +37,7 @@ public class DipendenteService {
                 }
         );
 
-        Dipendente dipendente = new Dipendente(newDipendente.username(), newDipendente.nome(), newDipendente.cognome(), newDipendente.email(),newDipendente.password(), newDipendente.profileImage());
+        Dipendente dipendente = new Dipendente(newDipendente.username(), newDipendente.nome(), newDipendente.cognome(), newDipendente.email(),passwordEncoder.encode(newDipendente.password()), newDipendente.profileImage());
 
         dipendente.setProfileImage("https://ui-avatars.com/api/?name="+ newDipendente.nome() + "+" + newDipendente.cognome());
         this.dipendentiDAO.save(dipendente);
